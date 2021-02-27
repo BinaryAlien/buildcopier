@@ -1,10 +1,10 @@
 import { DDragon } from "../src/ddragon";
 
-const version = "11.4.1";
+const version: string = "11.4.1";
 
 test("fetchChampions", () =>
 {
-	let dragon: DDragon = new DDragon(version);
+	const dragon: DDragon = new DDragon(version);
 
 	expect(dragon.champions.size).toBe(0);
 
@@ -16,7 +16,7 @@ test("fetchChampions", () =>
 
 test("fetchItems", () =>
 {
-	let dragon: DDragon = new DDragon(version);
+	const dragon: DDragon = new DDragon(version);
 
 	expect(dragon.items.size).toBe(0);
 
@@ -28,7 +28,7 @@ test("fetchItems", () =>
 
 test("getChampionByKey", () =>
 {
-	let dragon: DDragon = new DDragon(version);
+	const dragon: DDragon = new DDragon(version);
 
 	dragon.fetchChampions().then(() =>
 	{
@@ -40,7 +40,7 @@ test("getChampionByKey", () =>
 
 test("getChampionByName", () =>
 {
-	let dragon: DDragon = new DDragon(version);
+	const dragon: DDragon = new DDragon(version);
 
 	dragon.fetchChampions().then(() =>
 	{
@@ -52,7 +52,7 @@ test("getChampionByName", () =>
 
 test("getItemByKey", () =>
 {
-	let dragon: DDragon = new DDragon(version);
+	const dragon: DDragon = new DDragon(version);
 
 	dragon.fetchItems().then(() =>
 	{
@@ -64,11 +64,25 @@ test("getItemByKey", () =>
 
 test("getItemByName", () =>
 {
-	let dragon: DDragon = new DDragon(version);
+	const dragon: DDragon = new DDragon(version);
 
 	dragon.fetchItems().then(() =>
 	{
 		expect(dragon.getItemByName("Total Biscuit of Everlasting Will").gold.total).toBe(75);
 		expect(dragon.getItemByName("Boots").stats.FlatMovementSpeedMod).toBe(25);
+	});
+});
+
+test("getItemKey", () =>
+{
+	const dragon: DDragon = new DDragon(version);
+
+	dragon.fetchItems().then(() =>
+	{
+		const boots = dragon.getItemByName("Boots");
+		expect(dragon.getItemKey(boots)).toBe("1001");
+		expect(dragon.getItemKey("Boots")).toBe("1001");
+
+		expect(dragon.getItemKey(undefined)).toBeUndefined();
 	});
 });

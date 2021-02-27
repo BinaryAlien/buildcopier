@@ -1,6 +1,6 @@
 import * as superagent from "superagent";
 
-interface Image
+export interface Image
 {
 	full: string;
 	sprite: string;
@@ -11,7 +11,7 @@ interface Image
 	h: number;
 }
 
-interface ChampionInfo
+export interface ChampionInfo
 {
 	attack: number;
 	defense: number;
@@ -19,7 +19,7 @@ interface ChampionInfo
 	difficulty: number;
 }
 
-interface ChampionStats
+export interface ChampionStats
 {
 	hp: number;
 	hpperlevel: number;
@@ -43,7 +43,7 @@ interface ChampionStats
 	attackspeed: number;
 }
 
-interface Champion
+export interface Champion
 {
 	version: string;
 	id: string;
@@ -58,14 +58,14 @@ interface Champion
 	stats: ChampionStats;
 }
 
-interface ItemRune
+export interface ItemRune
 {
 	isrune: boolean;
 	tier: number;
 	type: string;
 }
 
-interface ItemGold
+export interface ItemGold
 {
 	base: number;
 	total: number;
@@ -73,7 +73,7 @@ interface ItemGold
 	purchasable: boolean;
 }
 
-interface ItemStats
+export interface ItemStats
 {
 	FlatHPPoolMod: number;
 	rFlatHPModPerLevel: number,
@@ -142,7 +142,7 @@ interface ItemStats
 	PercentSpellVampMod: number
 }
 
-interface Item
+export interface Item
 {
 	name: string;
 	rune: ItemRune;
@@ -191,8 +191,8 @@ export class DDragon
 
 	public static async getLatestVersion(): Promise<string>
 	{
-		let response = await superagent.get('https://ddragon.leagueoflegends.com/api/versions.json');
-		let data = JSON.parse(response.text);
+		const response = await superagent.get('https://ddragon.leagueoflegends.com/api/versions.json');
+		const data = JSON.parse(response.text);
 		return data[0];
 	}
 
@@ -202,12 +202,12 @@ export class DDragon
 	 */
 	private async fetchData<T>(key: string): Promise<Map<string, T>>
 	{
-		let response = await superagent.get(`https://ddragon.leagueoflegends.com/cdn/${this._version}/data/en_US/${key}.json`);
-		let data = JSON.parse(response.text);
+		const response = await superagent.get(`https://ddragon.leagueoflegends.com/cdn/${this._version}/data/en_US/${key}.json`);
+		const data = JSON.parse(response.text);
 
-		let res: Map<string, T> = new Map();
+		const res: Map<string, T> = new Map();
 
-		for (let champ in data.data)
+		for (const champ in data.data)
 		{
 			res.set(champ, data.data[champ]);
 		}
@@ -258,7 +258,7 @@ export class DDragon
 			key = key.toString();
 		}
 
-		for (let champion of this._champions.values())
+		for (const champion of this._champions.values())
 		{
 			if (champion.key == key)
 			{
@@ -275,9 +275,9 @@ export class DDragon
 	 */
 	public getChampionByName(name: string): Champion | undefined
 	{
-		let tmp = name.toLowerCase();
+		const tmp = name.trim().toLowerCase();
 
-		for (let champion of this._champions.values())
+		for (const champion of this._champions.values())
 		{
 			if (champion?.name.toLowerCase() == tmp)
 			{
@@ -308,9 +308,9 @@ export class DDragon
 	 */
 	public getItemByName(name: string): Item | undefined
 	{
-		name = name.toLowerCase();
+		name = name.trim().toLowerCase();
 
-		for (let item of this._items.values())
+		for (const item of this._items.values())
 		{
 			if (item.name.toLowerCase() == name)
 			{
@@ -319,6 +319,46 @@ export class DDragon
 		}
 
 		return undefined;
+	}
+
+	/**
+	 * Gets the key of an item
+	 * @param item - the item or item name we want to get the key of
+	 */
+	public getItemKey(item: Item | string) : string | undefined
+	{
+		if (typeof(item) === 'string')
+		{
+			item = item.trim().toLowerCase();
+
+			for (const [key, value] of this._items)
+			{
+				if (value.name.toLowerCase() == item)
+				{
+					return key;
+				}
+			}
+		}
+		else
+		{
+			for (const [key, value] of this._items)
+			{
+				if (value == item)
+				{
+					return key;
+				}
+			}
+		}
+
+		return undefined;
+	}
+
+	/**
+	 * @returns current game version used
+	 */
+	public get version(): string
+	{
+		return this._version;
 	}
 
 	/**
