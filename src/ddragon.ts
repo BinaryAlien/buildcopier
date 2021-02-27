@@ -168,10 +168,11 @@ interface Item
 	maps: Map<string, boolean>;
 }
 
-class DDragon
+export class DDragon
 {
 	/** Version of the game used */
 	private _version: string;
+
 	/** Champions dataset */
 	private _champions: Map<string, Champion>;
 	/** Items dataset */
@@ -183,6 +184,7 @@ class DDragon
 	constructor(version: string)
 	{
 		this._version = version;
+
 		this._champions = new Map();
 		this._items = new Map();
 	}
@@ -214,7 +216,7 @@ class DDragon
 	}
 
 	/**
-	 * Fetches and returns the champions dataset from DDragon.
+	 * Fetches and returns the champions dataset from DDragon
 	 *
 	 * @remarks
 	 * Does not do anything if this dataset was already cached.
@@ -249,28 +251,30 @@ class DDragon
 	 * Gets a champion by its key
 	 * @param key - the key of the champion
 	 */
-	public async getChampionByKey(key: string): Promise<Champion>
+	public getChampionByKey(key: string | number): Champion | undefined
 	{
-		await this.fetchChampions();
-
-		let champion = this._champions.get(key);
-
-		if (champion)
+		if (typeof(key) === 'number')
 		{
-			return champion;
+			key = key.toString();
 		}
 
-		throw Error(`Champion with key '${key}' not found in version ${this._version}`);
+		for (let champion of this._champions.values())
+		{
+			if (champion.key == key)
+			{
+				return champion;
+			}
+		}
+
+		return undefined;
 	}
 
 	/**
 	 * Gets a champion by its name (ignoring case)
 	 * @param name - the name of the champion
 	 */
-	public async getChampionByName(name: string): Promise<Champion>
+	public getChampionByName(name: string): Champion | undefined
 	{
-		await this.fetchChampions();
-
 		let tmp = name.toLowerCase();
 
 		for (let champion of this._champions.values())
@@ -281,35 +285,29 @@ class DDragon
 			}
 		}
 
-		throw Error(`Champion with name '${name}' not found in version ${this._version}`);
+		return undefined;
 	}
 
 	/**
 	 * Gets an item by its key
 	 * @param key - the key of the item
 	 */
-	public async getItemByKey(key: string): Promise<Item>
+	public getItemByKey(key: string | number): Item | undefined
 	{
-		await this.fetchItems();
-
-		let item = this._items.get(key);
-
-		if (item)
+		if (typeof(key) === 'number')
 		{
-			return item;
+			key = key.toString();
 		}
 
-		throw Error(`Item with key '${key}' not found in version ${this._version}`);
+		return this._items.get(key);
 	}
 
 	/**
 	 * Gets an item by its name (ignoring case)
 	 * @param name - the name of the item
 	 */
-	public async getItemByName(name: string): Promise<Item>
+	public getItemByName(name: string): Item | undefined
 	{
-		await this.fetchItems();
-
 		name = name.toLowerCase();
 
 		for (let item of this._items.values())
@@ -320,14 +318,10 @@ class DDragon
 			}
 		}
 
-		throw Error(`Item with name '${name}' not found in version ${this._version}`);
+		return undefined;
 	}
 
 	/**
-	 * @remarks
-	 * Will be empty as long as no methods related to this dataset does not get called.
-	 * You can call `fetchChampions` to fill it.
-	 *
 	 * @returns currently cached champions dataset
 	 */
 	public get champions(): Map<string, Champion>
@@ -336,11 +330,7 @@ class DDragon
 	}
 
 	/**
-	 * @remarks
-	 * Will be empty as long as methods related to this dataset does not get called.
-	 * You can call `fetchItems` to fill it.
-	 *
-	 * @returns currently cached items data
+	 * @returns currently cached items dataset
 	 */
 	public get items(): Map<string, Item>
 	{
