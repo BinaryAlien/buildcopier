@@ -45,11 +45,18 @@ export class BuildCopier
 	private _ddragon: DDragon;
 
 	/**
-	 * @param version - version of the game to use
+	 * @param opt - version of the game/DDragon instance to use
 	 */
-	constructor(version: string)
+	constructor(opt: string | DDragon)
 	{
-		this._ddragon = new DDragon(version);
+		if (typeof(opt) === 'string')
+		{
+			this._ddragon = new DDragon(opt);
+		}
+		else
+		{
+			this._ddragon = opt;
+		}
 	}
 
 	/**
