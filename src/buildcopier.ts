@@ -118,10 +118,7 @@ export class BuildCopier
 			buildIndex = 0;
 		}
 
-		const blocksHtml = builds[buildIndex]
-			.querySelector("div.view-guide__build__items")
-			.querySelector("div.collapseBox")
-			.querySelectorAll("div.view-guide__items");
+		const blocksHtml = builds[buildIndex].querySelectorAll("div.view-guide__build__items > div.collapseBox > div.view-guide__items")
 
 		const blocks: Array<ItemSetBlock> = [];
 
@@ -137,14 +134,13 @@ export class BuildCopier
 			const blockTitle = decode(blockHtml.querySelector('div.view-guide__items__bar > span').innerText);
 			block.type = blockTitle;
 
-			const blockItemsHtml = blockHtml
-				.querySelector("div.view-guide__items__content")
-				.querySelectorAll("span.ajax-tooltip");
+			const blockItemsHtml = blockHtml.querySelectorAll("div.view-guide__items__content > span.ajax-tooltip");
 
 			for (const itemHtml of blockItemsHtml)
 			{
 				const itemName = decode(itemHtml.querySelector("a > span").innerText);
 				const countTag = itemHtml.querySelector("a > label");
+
 				let count: number;
 
 				if (countTag)
@@ -183,12 +179,12 @@ export class BuildCopier
 	}
 
 	/**
-	 * Translates the Mobalytics builds for a given champion and role
+	 * Translates a Mobalytics build for the given champion
 	 * @param setName - the name of the output item set
-	 * @param champ - the champion's name/key
+	 * @param champ - the champion or its name/key
 	 * @param buildId - the ID of the build to translate
 	 */
-	public async translateMobalytics(setName: string, champ: string | number, buildId: number): Promise<string>
+	public async translateMobalytics(setName: string, champ: Champion | string | number, buildId: number): Promise<string>
 	{
 		setName = setName.trim();
 
@@ -202,18 +198,22 @@ export class BuildCopier
 		await this._ddragon.fetchChampions();
 
 		// get the champion by name
-		if (typeof(champ) === 'string')
+		if (typeof(champ) === "string")
 		{
 			champion = this._ddragon.getChampionByName(champ);
 		}
-
-		// otherwise get the champion by key
-		if (!champion)
+		// the champion is already provided
+		else if (typeof(champ) != "number")
+		{
+			champion = champ;
+		}
+		// get the champion by key
+		else
 		{
 			champion = this._ddragon.getChampionByKey(Number(champ));
 		}
 
-		// champion was not found either by name or by key
+		// champion was not found
 		if (!champion)
 		{
 			throw Error(`Champion with name/key ${champ} not found in version ${this._ddragon.version}`);
@@ -294,6 +294,113 @@ export class BuildCopier
 					id: id.toString(),
 					count: count
 				});
+			}
+
+			blocks.push(block);
+		}
+
+		return JSON.stringify({
+			associatedChampions: [Number(champion.key)],
+			associatedMaps: [],
+			title: setName,
+			blocks: blocks
+		});
+	}
+
+	/**
+	 * Translates the OP.GG build for a given champion and role
+	 * @param setName - the name of the output item set
+	 * @param champ - the champion or its name/key
+	 * @param role - the role
+	 */
+	public async translateOpDotGg(setName: string, champ: Champion | string | number, role: RolesOpDotGg): Promise<string>
+	{
+		setName = setName.trim();
+
+		if (setName.length < 1 || setName.length > setNameMaxLength)
+		{
+			throw Error(`setName must not be empty and have a length smaller than or equal to ${setNameMaxLength}`);
+		}
+
+		let champion: Champion | undefined;
+
+		await this._ddragon.fetchChampions();
+
+		// get the champion by name
+		if (typeof(champ) === "string")
+		{
+			champion = this._ddragon.getChampionByName(champ);
+		}
+		// the champion is already provided
+		else if (typeof(champ) != "number")
+		{
+			champion = champ;
+		}
+		// get the champion by key
+		else
+		{
+			champion = this._ddragon.getChampionByKey(Number(champ));
+		}
+
+		// champion was not found
+		if (!champion)
+		{
+			throw Error(`Champion with name/key ${champ} not found in version ${this._ddragon.version}`);
+		}
+
+		await this._ddragon.fetchItems();
+
+		const url = `https://www.op.gg/champion/${champion.name}/statistics/${role}`;
+
+		const response = await superagent.get(url);
+		const root = parse(response.text);
+
+		const rows = root
+			.querySelectorAll("table.champion-overview__table")[1]
+			.querySelectorAll("tbody > tr")
+
+		let categoryTitle = "???";
+
+		const blocks: Array<ItemSetBlock> = [];
+
+		for (const row of rows)
+		{
+			const block: ItemSetBlock = {
+				showIfSummonerSpell: "",
+				hideIfSummonerSpell: "",
+				items: [],
+				type: "???"
+			};
+
+			const isNewCategory = row.getAttribute("class")?.indexOf("champion-overview__row--first") != -1;
+
+			if (isNewCategory)
+			{
+				categoryTitle = row.querySelector("th").innerText;
+			}
+
+			const pickRate = row.querySelector("td.champion-overview__stats--pick > strong").innerText;
+
+			block.type = categoryTitle + " (" + pickRate + ")";
+
+			const itemsHtml = row.querySelectorAll("td.champion-overview__data.champion-overview__border.champion-overview__border--first > ul > li.champion-stats__list__item.tip");
+
+			for (const itemHtml of itemsHtml)
+			{
+				const src = itemHtml.querySelector("img").getAttribute("src");
+
+				if (src)
+				{
+					const ref = new URL("https:" + src);
+					const pathTokens = ref.pathname.split("/");
+					const filename = pathTokens[pathTokens.length - 1];
+					const id = filename.substring(0, filename.length - 4);
+
+					block.items.push({
+						id: id,
+						count: 1
+					});
+				}
 			}
 
 			blocks.push(block);
