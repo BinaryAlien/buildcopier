@@ -189,6 +189,9 @@ export class DDragon
 		this._items = new Map();
 	}
 
+	/**
+	 * @returns the latest version of League of Legends
+	 */
 	public static async getLatestVersion(): Promise<string>
 	{
 		const response = await superagent.get('https://ddragon.leagueoflegends.com/api/versions.json');
