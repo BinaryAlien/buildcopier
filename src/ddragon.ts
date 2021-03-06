@@ -251,6 +251,25 @@ export class DDragon
 	}
 
 	/**
+	 * Gets a champion by its ID (ignoring case)
+	 * @param id - the ID of the champion
+	 */
+	public getChampionById(id: string): Champion | undefined
+	{
+		const tmp = id.trim().toLowerCase();
+
+		for (const champion of this._champions.values())
+		{
+			if (champion.id.toLowerCase() == tmp)
+			{
+				return champion;
+			}
+		}
+
+		return undefined;
+	}
+
+	/**
 	 * Gets a champion by its key
 	 * @param key - the key of the champion
 	 */
@@ -326,7 +345,7 @@ export class DDragon
 
 	/**
 	 * Gets the key of an item
-	 * @param item - the item or item name we want to get the key of
+	 * @param item - the item or item name (ignoring case) we want to get the key of
 	 */
 	public getItemKey(item: Item | string) : string | undefined
 	{

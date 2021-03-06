@@ -163,7 +163,7 @@ export class BuildCopier
 				}
 				else
 				{
-					console.error("\"" + itemName + "\"");
+					console.error(`Item not found in version ${this._ddragon.version}: ${itemName}`);
 				}
 			}
 
@@ -181,7 +181,7 @@ export class BuildCopier
 	/**
 	 * Translates a Mobalytics build for the given champion
 	 * @param setName - the name of the output item set
-	 * @param champ - the champion or its name/key
+	 * @param champ - the champion or its name/ID/key
 	 * @param buildId - the ID of the build to translate
 	 */
 	public async translateMobalytics(setName: string, champ: Champion | string | number, buildId: number): Promise<string>
@@ -197,10 +197,22 @@ export class BuildCopier
 
 		await this._ddragon.fetchChampions();
 
-		// get the champion by name
 		if (typeof(champ) === "string")
 		{
+			// get the champion by name
 			champion = this._ddragon.getChampionByName(champ);
+
+			// otherwise get the champion by ID
+			if (!champion)
+			{
+				champion = this._ddragon.getChampionById(champ);
+			}
+
+			// otherwise get the champion by key
+			if (!champion)
+			{
+				champion = this._ddragon.getChampionByKey(champ);
+			}
 		}
 		// the champion is already provided
 		else if (typeof(champ) != "number")
@@ -216,7 +228,7 @@ export class BuildCopier
 		// champion was not found
 		if (!champion)
 		{
-			throw Error(`Champion with name/key ${champ} not found in version ${this._ddragon.version}`);
+			throw Error(`Champion with name/ID/key ${champ} not found in version ${this._ddragon.version}`);
 		}
 
 		const tmp = this._ddragon.version.split(".");
@@ -310,7 +322,7 @@ export class BuildCopier
 	/**
 	 * Translates the OP.GG build for a given champion and role
 	 * @param setName - the name of the output item set
-	 * @param champ - the champion or its name/key
+	 * @param champ - the champion or its name/ID/key
 	 * @param role - the role
 	 */
 	public async translateOpDotGg(setName: string, champ: Champion | string | number, role: RolesOpDotGg): Promise<string>
@@ -326,10 +338,22 @@ export class BuildCopier
 
 		await this._ddragon.fetchChampions();
 
-		// get the champion by name
 		if (typeof(champ) === "string")
 		{
+			// get the champion by name
 			champion = this._ddragon.getChampionByName(champ);
+
+			// otherwise get the champion by ID
+			if (!champion)
+			{
+				champion = this._ddragon.getChampionById(champ);
+			}
+
+			// otherwise get the champion by key
+			if (!champion)
+			{
+				champion = this._ddragon.getChampionByKey(champ);
+			}
 		}
 		// the champion is already provided
 		else if (typeof(champ) != "number")
@@ -345,7 +369,7 @@ export class BuildCopier
 		// champion was not found
 		if (!champion)
 		{
-			throw Error(`Champion with name/key ${champ} not found in version ${this._ddragon.version}`);
+			throw Error(`Champion with name/ID/key ${champ} not found in version ${this._ddragon.version}`);
 		}
 
 		await this._ddragon.fetchItems();
