@@ -1,10 +1,10 @@
 import { DDragon } from "../src/ddragon";
 
-const version: string = "11.4.1";
+const version = "11.4.1";
 
 test("fetchChampions", () =>
 {
-	const dragon: DDragon = new DDragon(version);
+	const dragon = new DDragon(version);
 
 	expect(dragon.champions.size).toBe(0);
 
@@ -16,7 +16,7 @@ test("fetchChampions", () =>
 
 test("fetchItems", () =>
 {
-	const dragon: DDragon = new DDragon(version);
+	const dragon = new DDragon(version);
 
 	expect(dragon.items.size).toBe(0);
 
@@ -28,7 +28,7 @@ test("fetchItems", () =>
 
 test("getChampionByKey", () =>
 {
-	const dragon: DDragon = new DDragon(version);
+	const dragon = new DDragon(version);
 
 	dragon.fetchChampions().then(() =>
 	{
@@ -40,7 +40,7 @@ test("getChampionByKey", () =>
 
 test("getChampionByName", () =>
 {
-	const dragon: DDragon = new DDragon(version);
+	const dragon = new DDragon(version);
 
 	dragon.fetchChampions().then(() =>
 	{
@@ -52,7 +52,7 @@ test("getChampionByName", () =>
 
 test("getItemByKey", () =>
 {
-	const dragon: DDragon = new DDragon(version);
+	const dragon = new DDragon(version);
 
 	dragon.fetchItems().then(() =>
 	{
@@ -64,7 +64,7 @@ test("getItemByKey", () =>
 
 test("getItemByName", () =>
 {
-	const dragon: DDragon = new DDragon(version);
+	const dragon = new DDragon(version);
 
 	dragon.fetchItems().then(() =>
 	{
@@ -75,7 +75,7 @@ test("getItemByName", () =>
 
 test("getItemKey", () =>
 {
-	const dragon: DDragon = new DDragon(version);
+	const dragon = new DDragon(version);
 
 	dragon.fetchItems().then(() =>
 	{
