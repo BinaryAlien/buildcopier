@@ -111,14 +111,14 @@ export class BuildCopier
 			throw Error(`Champion not found '${championName}'`);
 		}
 
-		const builds = root.querySelectorAll('div.view-guide__build');
+		const builds = root.querySelectorAll("div.view-guide__build");
 
 		if (buildIndex < 0 || buildIndex >= builds.length)
 		{
 			buildIndex = 0;
 		}
 
-		const blocksHtml = builds[buildIndex].querySelectorAll("div.view-guide__build__items > div.collapseBox > div.view-guide__items")
+		const blocksHtml = builds[buildIndex].querySelectorAll("div.view-guide__build__items > div.collapseBox div.view-guide__items");
 
 		const blocks: Array<ItemSetBlock> = [];
 
@@ -131,7 +131,7 @@ export class BuildCopier
 				type: ""
 			};
 
-			const blockTitle = decode(blockHtml.querySelector('div.view-guide__items__bar > span').innerText);
+			const blockTitle = decode(blockHtml.querySelector("div.view-guide__items__bar > span").innerText);
 			block.type = blockTitle;
 
 			const blockItemsHtml = blockHtml.querySelectorAll("div.view-guide__items__content > span.ajax-tooltip");
