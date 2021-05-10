@@ -5,7 +5,7 @@
 buildcopier is a TypeScript library which translates online League of Legends builds into clipboard imports.
 This is the successor and upgraded version of its Python equivalent `itemsetcopier` which I do not support anymore.
 
-The online build websites currently supported by buildcopier are [MOBAfire](https://mobafire.com/), [Mobalytics](https://mobalytics.gg/) and [OP.GG](https://www.op.gg/)
+The online build websites currently supported by buildcopier are [MOBAfire](https://mobafire.com/), [Mobalytics](https://mobalytics.gg/) and [OP.GG](https://www.op.gg/).
 
 ## How to use it
 
@@ -45,14 +45,14 @@ const url = "https://www.mobafire.com/league-of-legends/build/season-11-kami-cha
 // the index of the build we want (an invalid index will result in it being set to 0)
 const buildIndex = 0;
 
-bc.translateMobafire(setName, url, buildIndex).then((result: string) =>
+bc.translateMobafire(setName, url, buildIndex).then((result) =>
 {
-    // we can now copy and paste the generate
+    // we can now copy and paste the generated
     // clipboard import in League of Legends
     console.log(result);
-}).catch((err) =>
+}).catch((error) =>
 {
-    console.error("An error has occured: " + err);
+    console.error("An error has occured: " + error);
 });
 ```
 
