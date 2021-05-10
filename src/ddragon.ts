@@ -152,7 +152,7 @@ export interface Item
 	description: string;
 	colloq: string;
 	plaintext: string;
-	consumed: false;
+	consumed: boolean;
 	stacks: number;
 	depth: number;
 	consumeOnFull: boolean;
