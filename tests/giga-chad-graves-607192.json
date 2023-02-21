@@ -1,0 +1,20 @@
+{
+  "associatedChampions": [104],
+  "associatedMaps": [],
+  "title": "Giga Chad Graves",
+  "blocks": [
+    {
+      "showIfSummonerSpell": "",
+      "hideIfSummonerSpell": "",
+      "items": [
+        { "id": "6693", "count": 1 },
+        { "id": "3006", "count": 1 },
+        { "id": "3071", "count": 1 },
+        { "id": "6694", "count": 1 },
+        { "id": "3042", "count": 1 },
+        { "id": "6696", "count": 1 }
+      ],
+      "type": "Based"
+    }
+  ]
+}
