@@ -12,7 +12,7 @@ First of all, you must **instantiate** a `DataDragon` object from the [`data-dra
 
 This `DataDragon` object will be used by the converter to perform lookup of the champions and items in the online builds.
 
-```javascript
+```typescript
 import { DataDragon } from "data-dragon";
 
 // Specify a game version manually ...
@@ -24,7 +24,7 @@ const dragon = await DataDragon.latest();
 
 From there, you can use a [converter function](https://github.com/BinaryAlien/buildcopier/tree/main/src/converters) to convert the online builds of a certain web entity.
 
-```javascript
+```typescript
 /* Example using the MOBAfire converter. */
 
 import { DataDragon } from "data-dragon";
