@@ -8,7 +8,7 @@ A web application which reflects this library's functionality is available on [B
 
 ## Usage
 
-First of all, you must **instantiate** a `DataDragon` object from the [`data-dragon`](https://github.com/BinaryAlien/data-dragon) dependency.
+First of all, **instantiate** a `DataDragon` object from the [`data-dragon`](https://github.com/BinaryAlien/data-dragon) dependency.
 
 This `DataDragon` object will be used by the converter to perform lookup of the champions and items in the online builds.
 
@@ -18,19 +18,22 @@ import { DataDragon } from "data-dragon";
 // Specify a game version manually ...
 const dragon = new DataDragon("13.15.1");
 
-// ... or use the latest version
+// ... or use the latest version.
 const dragon = await DataDragon.latest();
-
 ```
 
-Then, you can fetch and cache the `champions` and `items` datasets.
+Fetch the required datasets `champions` and `items` to cache relevant game data for the converter.
+
+(This action is only required once per instance.)
 
 ```typescript
 await dragon.champions.fetch();
 await dragon.items.fetch();
 ```
 
-You can now use a [converter function](https://github.com/BinaryAlien/buildcopier/tree/main/src/converters) to convert the online builds of a certain web entity.
+Choose a [converter function](https://github.com/BinaryAlien/buildcopier/tree/main/src/converters) to convert the online builds of a certain web entity.
+
+Pass in the `DataDragon` instance as well as any additional parameters specified by the function.
 
 ```typescript
 /* Example using the MOBAfire converter. */
@@ -51,6 +54,9 @@ const parameters: MobafireParameters = {
 
   // Index of the build to convert (starting from 0).
   targetBuildIndex: 0,
+
+  // Whether to ignore unknown items.
+  ignoreUnknownItems: true,
 };
 
 try {
