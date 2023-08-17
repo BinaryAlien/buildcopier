@@ -20,9 +20,17 @@ const dragon = new DataDragon("13.15.1");
 
 // ... or use the latest version
 const dragon = await DataDragon.latest();
+
 ```
 
-From there, you can use a [converter function](https://github.com/BinaryAlien/buildcopier/tree/main/src/converters) to convert the online builds of a certain web entity.
+Then, you can fetch and cache the `champions` and `items` datasets.
+
+```typescript
+await dragon.champions.fetch();
+await dragon.items.fetch();
+```
+
+You can now use a [converter function](https://github.com/BinaryAlien/buildcopier/tree/main/src/converters) to convert the online builds of a certain web entity.
 
 ```typescript
 /* Example using the MOBAfire converter. */
@@ -31,6 +39,8 @@ import { DataDragon } from "data-dragon";
 import { mobafire, MobafireParameters } from "buildcopier";
 
 const dragon = new DataDragon("13.15.1");
+await dragon.champions.fetch();
+await dragon.items.fetch();
 
 const parameters: MobafireParameters = {
   // URL of the guide to convert.
