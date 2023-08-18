@@ -1,6 +1,6 @@
 {
   "name": "buildcopier",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "TypeScript library which converts online League of Legends builds into clipboard imports",
   "main": "lib/index.js",
   "directories": {

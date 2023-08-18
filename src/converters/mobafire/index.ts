@@ -11,6 +11,7 @@ export default async (
 ): Promise<ItemSet> => {
   const guide = await Guide.fetch(parameters.url);
   const champ = guide.getAssociatedChampion(dragon);
+  const associatedChampions = champ ? [Number(champ.key)] : [];
   const buildIndex = parameters?.buildIndex ?? 0;
   const build = guide.getBuild(buildIndex);
   const title = parameters?.outputTitle || guide.getTitle() || "Unnamed";
@@ -19,7 +20,7 @@ export default async (
     parameters?.ignoreUnknownItems ?? false,
   );
   return {
-    associatedChampions: [Number(champ.key)],
+    associatedChampions,
     associatedMaps: [],
     title,
     blocks,

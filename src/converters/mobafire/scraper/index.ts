@@ -35,15 +35,9 @@ export default class Guide {
     return Guide.URL_REGEX.test(url);
   }
 
-  getAssociatedChampion(dragon: DataDragon): Champion {
+  getAssociatedChampion(dragon: DataDragon): Champion | undefined {
     const name = this.getAssociatedChampionName();
-    const champ = dragon.champions.find((champion) => champion.name === name);
-    if (!champ) {
-      throw ConversionError.scraper(
-        `Cannot find champion \`${name}' in version ${dragon.version}`,
-      );
-    }
-    return champ;
+    return dragon.champions.find((champion) => champion.name === name);
   }
 
   getTitle(): string {
