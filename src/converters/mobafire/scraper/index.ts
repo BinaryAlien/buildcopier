@@ -56,7 +56,8 @@ export default class Guide {
     }
     if (index >= this.getBuildCount()) {
       throw ConversionError.input(
-        `Invalid build index: must be strictly less than ${this.getBuildCount()}`,
+        `Invalid build index: the guide has ${this.getBuildCount()} build` +
+          (this.getBuildCount() === 1 ? "" : "s"),
       );
     }
     return new Build(this.getBuildRoots()[index]);
