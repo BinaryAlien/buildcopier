@@ -9,7 +9,7 @@ import { HTMLElement, parse } from "node-html-parser";
 
 export default class Guide {
   static readonly URL_REGEX =
-    /^https?:\/\/(www\.)?mobafire\.com\/league-of-legends\/build\/[0-9A-Za-z-]+-[0-9]{6}(#.*)?$/;
+    /^https?:\/\/(?:www\.)?mobafire\.com\/league-of-legends\/build\/[0-9A-Za-z-]+-[0-9]{6}(?:#.*)?$/;
 
   private readonly _document: HTMLElement;
 
