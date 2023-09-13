@@ -9,7 +9,7 @@ import { HTMLElement, parse } from "node-html-parser";
 
 export default class Guide {
   static readonly URL_REGEX =
-    /^https?:\/\/(?:www\.)?mobafire\.com\/league-of-legends\/build\/[0-9A-Za-z-]+-[0-9]{6}(?:#.*)?$/;
+    /^https?:\/\/(?:www\.)?mobafire\.com\/league-of-legends\/build\/[0-9A-Za-z-]+-[0-9]{6}(?:#.*)?/;
 
   private readonly _document: HTMLElement;
 
@@ -18,21 +18,20 @@ export default class Guide {
   }
 
   static async fetch(url: string | URL): Promise<Guide> {
-    if (!this.isValidUrl(url))
+    if (url instanceof URL) {
+      url = url.toString();
+    }
+    const matches = url.match(Guide.URL_REGEX);
+    if (!matches) {
       throw ConversionError.input("Invalid MOBAfire guide URL");
+    }
+    url = matches[0];
     try {
-      const response = await axios.get(url.toString());
+      const response = await axios.get(url);
       return new Guide(response.data);
     } catch (error) {
       throw ConversionError.network(error, "Cannot fetch MOBAfire guide: ");
     }
-  }
-
-  static isValidUrl(url: string | URL): boolean {
-    if (url instanceof URL) {
-      url = url.toString();
-    }
-    return Guide.URL_REGEX.test(url);
   }
 
   getAssociatedChampion(dragon: DataDragon): Champion | undefined {
